@@ -1,51 +1,64 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: {
-    index: './src/index.js',
-    print: './src/print.js',
+    index: "./src/index.js",
+    print: "./src/print.js",
   },
-  mode: 'development',
+  mode: "development",
   output: {
-    filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "dist"),
     clean: true,
   },
-  devtool: 'inline-source-map',
+  devtool: "inline-source-map",
   devServer: {
-    static: './dist',
+    static: "./dist",
+    devMiddleware: {
+      index: true,
+      mimeTypes: { phtml: "text/html" },
+      publicPath: "/publicPathForDevServe",
+      serverSideRender: true,
+      writeToDisk: true,
+    },
   },
   module: {
     rules: [
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
+        type: "asset/resource",
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        type: 'asset/resource',
+        type: "asset/resource",
       },
       {
         test: /\.(csv|tsv)$/i,
-        use: ['csv-loader'],
+        use: ["csv-loader"],
       },
       {
         test: /\.xml$/i,
-        use: ['xml-loader'],
+        use: ["xml-loader"],
+      },
+      {
+        test: /\.(html)$/,
+        use: ["html-loader"],
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Development',
+      title: "Development",
+      template: "./src/index.ejs",
     }),
   ],
+
   optimization: {
-    runtimeChunk: 'single',
+    runtimeChunk: "single",
   },
 };
